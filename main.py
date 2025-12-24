@@ -6,7 +6,7 @@ from env import TELEGRAM_BOT_TOKEN, GEMINI_API_KEY
 from crewai import Crew, Agent, Task
 from crewai.project import CrewBase, task, agent, crew
 
-from tools import WebSearchTool
+from tools import web_search_tool, naver_search_tool, google_search_tool
 # def agent(message: str) -> str:
 #     # Dummy implementation of the agent function
 #     return f"Agent received your message: {message}"
@@ -30,7 +30,7 @@ class ChatBotCrew:
             어떤 질문이든 그 본질을 파악하고, 웹 검색과 같은 강력한 도구를 활용하여 사용자에게 가장 필요한 맞춤형 답변을 제공하는 것을 사명으로 삼고 있습니다.
             """,
             llm="gemini/gemini-3-flash-preview",
-            tools=[WebSearchTool],
+            tools=[naver_search_tool, google_search_tool],
         )
 
     @task
@@ -78,3 +78,13 @@ app = ApplicationBuilder().token(TELEGRAM_BOT_TOKEN).build()
 app.add_handler(MessageHandler(filters.TEXT, handler))
 
 app.run_polling()
+
+"""
+[NOTE]
+
+1. Agent에 tools를 할당하는 경우
+- 이 에이전트에게 할당되는 모든 Task에서 해당 도구를 사용할 수 있습니다.
+
+2. Task에 tools를 할당하는 경우
+- 해당 Task를 수행하는 동안에만 도구를 사용할 수 있습니다.
+"""
